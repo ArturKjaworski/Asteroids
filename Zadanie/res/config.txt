@@ -1,0 +1,22 @@
+playerFireRate 1 
+projectilesSpeed 30
+forwardSpeed 0.1
+enemyAngVelocityMin 0.2 0.2 0.3 
+enemyAngVelocityMax 0.5 0.3 0.8 
+enemyExplosionTime 1
+playerThrusterForce 50 
+playerMass 125
+enemyInitialCreationRate 1
+enemyCreationRate 0.5
+
+default
+playerFireRate 1 
+projectilesSpeed 30
+forwardSpeed 0.5
+enemyAngVelocityMin 0.2 0.2 0.3 
+enemyAngVelocityMax 0.5 0.3 0.8 
+enemyExplosionTime 1
+playerThrusterForce 30 
+playerMass 125
+enemyInitialCreationRate 1
+enemyCreationRate 0.5
