@@ -1,25 +1,27 @@
 #include "pch.h"
 #include "Camera.h"
 
-Camera::Camera(const glm::vec3& pos, float fov, float aspect, float zNear, float zFar)
+Camera::Camera(const glm::vec3& pos, float fov, GLfloat w, GLfloat h, float zNear, float zFar)
 {
-	perspectiveMat = glm::perspective(fov, aspect, zNear, zFar);
-
 	this->pos = pos;
-	forward = glm::vec3(0.0, 0.0, -1.0);
 	up = glm::vec3(0.0, 1.0, 0.0);
+
+	SetOrthoMat(w, h);
+	SetPerspMat(fov, h / w, zNear, zFar);
 }
 
 Camera::~Camera()
 {
 }
 
-void Camera::SetBoundary(GLuint w, GLuint h)
+void Camera::SetOrthoMat(GLfloat w, GLfloat h)
 {
-	boundary.x = w;
-	boundary.y = h;
+	orthoMat = glm::ortho(0.f, w, 0.f, h);
+}
 
-	orthoMat = glm::ortho(0.f, boundary.x, 0.f, boundary.y, -1.f, 1.f);
+void Camera::SetPerspMat(GLfloat fov, GLfloat aspect, GLfloat zNear, GLfloat zFar)
+{
+	perspectiveMat = glm::perspective(fov, aspect, zNear, zFar);
 }
 
 glm::mat4 Camera::GetPerspViewProjection() const

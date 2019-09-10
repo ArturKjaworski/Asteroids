@@ -1,5 +1,4 @@
 #pragma once
-
 #include <vector>
 
 class Camera;
@@ -13,14 +12,14 @@ public:
 	~Renderer();
 	static Renderer& GetInstance();
 
-	void Init(const std::string& shaderName, const GLuint SCR_WIDTH, const GLuint SCR_HEIGHT);
+	void Init(const std::string& shaderName, const std::string& textShaderName, const GLfloat SCR_WIDTH, const GLfloat SCR_HEIGHT);
 
 	void Clear();
-	void Draw(const std::vector<GameObject*>& gObjs);
+	void Draw();
 
 private:
 	Camera* cam = nullptr;
 	Shader* shader = nullptr;
-
+	Shader* textShader = nullptr;
 };
 

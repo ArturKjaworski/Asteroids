@@ -7,32 +7,29 @@
 
 Shader::Shader(const std::string & fileName)
 {
-	program = glCreateProgram();
-
 	shaders[EShaderType::VERTEX] = CreateShader(LoadShader(fileName+".vert"), GL_VERTEX_SHADER);
 	shaders[EShaderType::FRAGMENT] = CreateShader(LoadShader(fileName+".frag"), GL_FRAGMENT_SHADER);
+
+	program = glCreateProgram();
 
 	for (size_t ii = 0; ii < EShaderType::COUNT; ++ii)
 		glAttachShader(program, shaders[ii]);
 
-	glBindAttribLocation(program, 0, "position");
-	glBindAttribLocation(program, 1, "texCoords");
+	//glBindAttribLocation(program, 0, "position");
+	//glBindAttribLocation(program, 1, "texCoords");
 
 	glLinkProgram(program);
 	CheckShaderError(program, GL_LINK_STATUS, true, "Program linking error");
 
 	glValidateProgram(program);
 	CheckShaderError(program, GL_VALIDATE_STATUS, true, "Program invalid");
+
+	glDeleteShader(shaders[EShaderType::VERTEX]);
+	glDeleteShader(shaders[EShaderType::FRAGMENT]);
 }
 
 Shader::~Shader()
 {
-	for (size_t ii = 0; ii < EShaderType::COUNT; ++ii)
-	{
-		glDetachShader(program, shaders[ii]);
-		glDeleteShader(shaders[ii]);
-	}
-
 	glDeleteProgram(program);
 }
 
@@ -61,7 +58,7 @@ std::string Shader::LoadShader(const std::string & fileName)
 
 GLuint Shader::CreateShader(const std::string & text, GLenum shaderType)
 {
-	
+	const char* shaderCode = text.c_str();
 	GLuint shader = glCreateShader(shaderType);
 
 	if (shader == 0)
@@ -70,10 +67,7 @@ GLuint Shader::CreateShader(const std::string & text, GLenum shaderType)
 		return 0;
 	}
 
-	const char* shaderSourceStrings = text.c_str();
-	int shaderSourceStrLen = text.length();
-
-	glShaderSource(shader, 1, &shaderSourceStrings, &shaderSourceStrLen);
+	glShaderSource(shader, 1, &shaderCode, NULL);
 
 	glCompileShader(shader);
 
@@ -104,7 +98,13 @@ void Shader::CheckShaderError(GLuint shader, GLuint flag, bool isProgram, const 
 	}
 }
 
-void Shader::SetUniformMat4f(const std::string & name, const glm::mat4 & mat)
+void Shader::SetUniformMat4f(const std::string & name, glm::mat4 & mat)
 {
-	glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, false, &mat[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, name.c_str()), 1, GL_FALSE, glm::value_ptr(mat));
 }
+
+void Shader::SetUniform3f(const std::string & name, const glm::vec3 & color)
+{
+	glUniform3f(glGetUniformLocation(program, name.c_str()), color.x, color.y, color.z);
+}
+
