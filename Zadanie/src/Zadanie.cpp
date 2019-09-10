@@ -75,6 +75,9 @@ int main(void)
 	Renderer& renderer = Renderer::GetInstance();
 	renderer.Init("res/basicShader", "res/textShader", SCR_WIDTH, SCR_HEIGHT);
 
+	TextureManager::GetInstance().LoadTextures();
+	MeshManager::GetInstance().LoadModels();
+
 	glfwSetKeyCallback(window, Input::Key_callback);
 
 	// render loop
@@ -87,6 +90,15 @@ int main(void)
 	while (!glfwWindowShouldClose(window))
 	{
 		glfwPollEvents();
+
+		if (game.GetGameState() == Game::EGameState::LOADING)
+		{
+			TextureManager::GetInstance().Update();
+			MeshManager::GetInstance().Update();
+
+			if (MeshManager::GetInstance().IsLoaded() && TextureManager::GetInstance().IsLoaded())
+				Game::GetInstance().SetState(Game::EGameState::MAIN_MENU);
+		}
 
 		Input::Handle(window);
 		endTime = glfwGetTime();

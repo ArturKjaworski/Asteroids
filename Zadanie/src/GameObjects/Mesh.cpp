@@ -3,18 +3,25 @@
 #include "Mesh.h"
 
 #include <vector>
+#include <thread>
+
 //////////////////////////////////////////////////////////////////////////////
 //  								Mesh									//
 //////////////////////////////////////////////////////////////////////////////
 Mesh::Mesh(const std::string& fileName)
 {
-	IndexedModel model = OBJModel(fileName).ToIndexedModel();
-	Init(model.positions, model.indices, model.texCoords);
+	std::thread t([&]() 
+	{
+		model = OBJModel(fileName).ToIndexedModel();
+	});
+	t.detach();
 }
 
 Mesh::Mesh(std::vector<glm::vec3>& positions, std::vector<unsigned int>& indices, std::vector<glm::vec2>& texCoords)
 {
-	Init(positions, indices, texCoords);
+	model.positions = positions;
+	model.indices = indices;
+	model.texCoords = texCoords;
 }
 
 Mesh::~Mesh()
@@ -25,7 +32,7 @@ Mesh::~Mesh()
 	glDeleteVertexArrays(1, &vaArrObject);
 }
 
-void Mesh::Init(const IndexedModel & model)
+void Mesh::Init()
 {
 	indicesCount = model.indices.size();
 
@@ -54,37 +61,8 @@ void Mesh::Init(const IndexedModel & model)
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, model.indices.size() * sizeof(model.indices[0]), &model.indices[0], GL_STATIC_DRAW);
 
 	glBindVertexArray(0);
-}
 
-void Mesh::Init(const std::vector<glm::vec3>& positions, const std::vector<unsigned int>& indices, const std::vector<glm::vec2>& texCoords)
-{
-	indicesCount = indices.size();
-
-	glGenVertexArrays(1, &vaArrObject);
-	glBindVertexArray(vaArrObject);
-
-	//vertex buffer
-	glGenBuffers(EVertexBufferType::COUNT, vaBuffers);
-
-	glBindBuffer(GL_ARRAY_BUFFER, vaBuffers[EVertexBufferType::POSITION]);
-	glBufferData(GL_ARRAY_BUFFER, positions.size() * sizeof(positions[0]), &positions[0], GL_STATIC_DRAW);
-
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, 0);
-
-
-	glBindBuffer(GL_ARRAY_BUFFER, vaBuffers[EVertexBufferType::TEX_COORDS]);
-	glBufferData(GL_ARRAY_BUFFER, texCoords.size() * sizeof(texCoords[0]), &texCoords[0], GL_DYNAMIC_DRAW);
-
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, 0);
-
-
-	//indices buffer
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vaBuffers[EVertexBufferType::INDEX]);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), &indices[0], GL_STATIC_DRAW);
-
-	glBindVertexArray(0);
+	model = IndexedModel();
 }
 
 void Mesh::Bind() const
@@ -128,6 +106,16 @@ MeshManager& MeshManager::GetInstance()
 	return instance;
 }
 
+void MeshManager::Update()
+{
+	for (Mesh* mesh : meshes)
+		if (mesh->IsModelLoaded())
+		{
+			mesh->Init();
+			++loadedMeshCounter;
+		}
+}
+
 void MeshManager::LoadModels()
 {
 	for (auto& pair : meshID)
@@ -149,6 +137,11 @@ void MeshManager::Unbind()
 {
 	glBindVertexArray(0);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+}
+
+bool MeshManager::IsLoaded()
+{
+	return (loadedMeshCounter == meshID.size());
 }
 
 void MeshManager::AddOffsetToUV(float offset)

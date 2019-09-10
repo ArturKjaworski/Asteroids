@@ -33,12 +33,7 @@ void Renderer::Init(const std::string& shaderName, const std::string& textShader
 
 	TextManager::GetInstance().Init(SCR_WIDTH, SCR_HEIGHT);
 
-	Draw();
-
-	TextureManager::GetInstance().GenerateTextures();
-	MeshManager::GetInstance().LoadModels();
-	Game::GetInstance().SetState(Game::EGameState::MAIN_MENU);
-
+//	Draw();
 }
 
 Renderer::~Renderer()

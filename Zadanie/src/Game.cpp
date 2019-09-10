@@ -1,14 +1,8 @@
 #include "pch.h"
 #include "Game.h"
 
-#include "GameObjects/GameObject.h"
-#include "GameObjects/Player.h"
-#include "GameObjects/Enemy.h"
-#include "GameObjects/StaticObject.h"
-#include "GameObjects/Projectile.h"
 #include "Text.h"
 #include "Input.h"
-
 #include "Settings.h"
 
 #include <iostream>

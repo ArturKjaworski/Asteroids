@@ -1,12 +1,14 @@
 #pragma once
 
 #include "GameObjects/Player.h"
+#include "GameObjects/GameObject.h"
+#include "GameObjects/Enemy.h"
+#include "GameObjects/StaticObject.h"
+#include "GameObjects/Projectile.h"
 
 #include <vector>
 #include <map>
 
-class GameObject;
-class StaticObject;
 
 class Game
 {

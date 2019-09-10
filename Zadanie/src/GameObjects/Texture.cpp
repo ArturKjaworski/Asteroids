@@ -5,7 +5,7 @@
 
 #include <iostream>
 
-
+#include <thread>
 
 TextureManager::TextureManager()
 {
@@ -23,37 +23,66 @@ TextureManager & TextureManager::GetInstance()
 	return instance;
 }
 
-void TextureManager::GenerateTextures()
+void TextureManager::LoadTextures()
 {
-	unsigned char* localbuffer;
-	int width, height, BPP;
-
 	glGenTextures(texID.size(), tex);
-	//create textures
+
+	std::lock_guard<std::mutex> lock(textures_mutex);
 	for (auto& pair : texID)
 	{
-		stbi_set_flip_vertically_on_load(1);
+		std::thread t([=]()
+		{
+			Texture* tex = new Texture();
+			tex->localBuffer = stbi_load(pair.first.c_str(), &tex->width, &tex->height, &tex->BPP, 4);
+			tex->id = pair.second;
 
-		unsigned char* localBuffer = stbi_load(pair.first.c_str(), &width, &height, &BPP, 4);
+			if (!tex->localBuffer)
+				std::cout << "\nTexture loading failed\n";
 
-		if (!localBuffer)
-			std::cout << "\nTexture loading failed\n";
-
-		glBindTexture(GL_TEXTURE_2D, tex[pair.second]);
-		glBindBuffer(GL_TEXTURE_2D, tex[pair.second]);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, localBuffer);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		if (localBuffer)
-			stbi_image_free(localBuffer);
+			textures.push_back(tex);
+		});
+		t.detach();
 	}
+}
+
+void TextureManager::Update()
+{
+	std::lock_guard<std::mutex> lock(textures_mutex);
+	for (int ii = textures.size() - 1; ii >= 0; --ii)
+	{
+		GenerateTexture(ii);
+
+		delete(textures[ii]);
+		textures.erase(textures.begin() + ii);
+
+		++loadedTexCounter;
+	}
+}
+
+bool TextureManager::IsLoaded()
+{
+	return loadedTexCounter == texID.size();
+}
+
+
+void TextureManager::GenerateTexture(int ii)
+{
+	stbi_set_flip_vertically_on_load(1);
+	
+	glBindTexture(GL_TEXTURE_2D, tex[textures[ii]->id]);
+	glBindBuffer(GL_TEXTURE_2D, tex[textures[ii]->id]);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, textures[ii]->width, textures[ii]->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, textures[ii]->localBuffer);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	if (textures[ii]->localBuffer)
+		stbi_image_free(textures[ii]->localBuffer);
 }
 
 void TextureManager::Bind(const std::string& texPath, GLuint slot)
@@ -63,10 +92,10 @@ void TextureManager::Bind(const std::string& texPath, GLuint slot)
 
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, tex[texID[texPath]]);
-	//glBindBuffer(GL_TEXTURE_2D, tex[texID[texPath]]);
 }
 
 void TextureManager::Unbind()
 {
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
+

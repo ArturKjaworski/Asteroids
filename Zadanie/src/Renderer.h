@@ -21,5 +21,7 @@ private:
 	Camera* cam = nullptr;
 	Shader* shader = nullptr;
 	Shader* textShader = nullptr;
+
+	bool modelLoaded = false;
 };
 

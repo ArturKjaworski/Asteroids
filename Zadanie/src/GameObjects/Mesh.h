@@ -12,8 +12,7 @@ public:
 	Mesh(std::vector<glm::vec3>& positions, std::vector<unsigned int>& indices, std::vector<glm::vec2>& texCoords);
 	~Mesh();
 
-	void Init(const IndexedModel& model);
-	void Init(const std::vector<glm::vec3>& positions, const std::vector<unsigned int>& indices, const std::vector<glm::vec2>& texCoords);
+	void Init();
 
 	void Bind() const;
 	void Unbind() const;
@@ -21,6 +20,7 @@ public:
 	void UpdateTexCoords(const std::vector<glm::vec2>& texCoords);
 
 	GLuint GetIndicesCount() const { return indicesCount; }
+	bool IsModelLoaded() { return !model.positions.empty(); }
 
 private:
 	enum EVertexBufferType
@@ -30,6 +30,9 @@ private:
 		TEX_COORDS,
 		COUNT
 	};
+
+	IndexedModel model;
+
 	GLuint indicesCount;
 	GLuint vaArrObject;
 	GLuint vaBuffers[EVertexBufferType::COUNT];
@@ -45,16 +48,19 @@ public :
 
 	static MeshManager& GetInstance();
 	
+	void Update();
+
 	void LoadModels();
 
 	void Bind(const std::string& modelPath);
 	void Unbind();
 
+	bool IsLoaded();
+
 	const Mesh& GetMesh(const std::string& modelPath) { return *meshes[meshID[modelPath]]; }
-
 	void AddOffsetToUV(float offset);
-
 	std::vector<glm::vec2>& GetBGTexCoords() { return bgTexCoords; }
+
 private:
 
 	std::vector<glm::vec3> bgPositions=
@@ -97,4 +103,6 @@ private:
 	};
 
 	std::vector<Mesh*> meshes;
+
+	unsigned int loadedMeshCounter = 0;
 };
