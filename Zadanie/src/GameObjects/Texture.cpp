@@ -33,6 +33,7 @@ void TextureManager::GenerateTextures()
 	for (auto& pair : texID)
 	{
 		stbi_set_flip_vertically_on_load(1);
+
 		unsigned char* localBuffer = stbi_load(pair.first.c_str(), &width, &height, &BPP, 4);
 
 		if (!localBuffer)

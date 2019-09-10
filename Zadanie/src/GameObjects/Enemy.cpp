@@ -8,7 +8,7 @@ Enemy::Enemy(const std::string & modelPath, const std::string & texPath, EObject
 {
 	Settings& set = Settings::GetInstance();
 	
-	velocity = glm::vec3(0, 0, float((rand() % 50) + 25) / 100 + set.settings.forwardSpeed);
+	velocity = glm::vec3(0, 0, float((rand() % 80)) + set.settings.forwardSpeed);
 
 	glm::vec3 minAng = set.settings.enemyAngVelocityMin;
 	glm::vec3 maxAng = set.settings.enemyAngVelocityMax;
@@ -18,7 +18,7 @@ Enemy::Enemy(const std::string & modelPath, const std::string & texPath, EObject
 	angVelocity.z = float(rand() % (int((maxAng.z - minAng.z) * 100))) / 100 + minAng.z;
 
 	explosionTime = set.settings.enemyExplosionTime;
-
+	
 	size = glm::vec3(3.4, 0, 3.0);
 }
 
@@ -33,11 +33,11 @@ void Enemy::Update(float deltaTime)
 	transform.SetRot(rot);
 	
 	glm::vec3 pos = transform.GetPos();
-	pos += velocity;
+	pos += velocity * deltaTime;
 	transform.SetPos(pos);
 }
 
-void Enemy::OnHit()
+bool Enemy::OnHit()
 {
-
+	return true;
 }

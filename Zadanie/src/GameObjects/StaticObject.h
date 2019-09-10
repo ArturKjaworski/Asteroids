@@ -9,6 +9,11 @@ public:
 	~StaticObject();
 
 	void Update(float deltaTime)override;
-	void OnHit()override {}
+	bool OnHit()override { return true; }
+
+	float scaleTimer = 0;
+	float exploSionTime = 1;
+
+	float alpha = 0.99;
 };
 

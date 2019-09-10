@@ -24,7 +24,8 @@ void Projectile::Update(float deltaTime)
 	transform.SetPos(pos);
 }
 
-void Projectile::OnHit()
+bool Projectile::OnHit()
 {
-	std::cout << "projectile hit sth\n";
+	
+	return true;
 }

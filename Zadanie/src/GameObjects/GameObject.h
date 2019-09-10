@@ -15,6 +15,7 @@ public:
 		, PLAYER
 		, ENEMY
 		, PROJECTILE
+		, EXPLOSION
 	};
 
 	GameObject();
@@ -26,7 +27,7 @@ public:
 	void Unbind() const;
 
 	virtual void Update(float deltaTime) = 0;
-	virtual void OnHit() = 0;
+	virtual bool OnHit() = 0;
 
 	//getters
 	Transform& GetTransform() { return transform; }

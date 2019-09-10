@@ -13,18 +13,33 @@ public:
 	~Player();
 
 	void Move(int op);
-	void Shoot();
+	bool Shoot();
 
-	void Update(float deltaTime)override;
-	void OnHit()override;
+	void Update(float deltaTime)override;	
+	bool OnHit() override;
 
-	const int GetFireRate() const { return fireRate; }
+	const float GetFireRate() const { return fireRate; }
+	const int GetBombCount() const { return bombs; }
+	const int GetShieldCount() const { return shields; }
+
+	void AddBonus();
+
+
 private:
-	float mass;						//[kg]
-	float thrusterForce;				//[N]
-	float fireRate;						//[m/s]
+	float mass;								//[kg]
+	float thrusterForce;					//[N]
+	float fireRate;							//[m/s]
 
 	glm::vec3 velocity = glm::vec3();		//[m/s]
 	glm::vec3 acceleration = glm::vec3();	//[m/s^2]
+
+	const int maxShields = 2;
+
+	int shields;
+
+	int bombs;
+
+	void AddShield();
+	void AddBomb();
 };
 

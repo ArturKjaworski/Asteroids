@@ -59,10 +59,18 @@ private:
 
 	std::vector<glm::vec3> bgPositions=
 	{
-		{-60.0, 0.0,  75 },
-		{-60.0, 0.0, -75 },
-		{ 60.0, 0.0, -75 },
-		{ 60.0, 0.0,  75 }
+		{-60.0, -0.1f,  75 },
+		{-60.0, -0.1f, -75 },
+		{ 60.0, -0.1f, -75 },
+		{ 60.0, -0.1f,  75 }
+	};
+
+	std::vector<glm::vec3> exploPositions =
+	{
+		{-2.0f, 0.1f,  2.0f },
+		{-2.0f, 0.1f, -2.0f },
+		{ 2.0f, 0.1f, -2.0f },
+		{ 2.0f, 0.1f,  2.0f }
 	};
 
 	std::vector<unsigned int> bgIndices =
@@ -84,11 +92,9 @@ private:
 		std::make_pair("res/models/asteroid1.obj" , 0),
 		std::make_pair("res/models/player.obj" , 1),
 		std::make_pair("res/models/projectile.obj", 2),
-		std::make_pair("BG", 3)
+		std::make_pair("BG", 3),
+		std::make_pair("explo", 4)
 	};
 
 	std::vector<Mesh*> meshes;
-
-
-
 };

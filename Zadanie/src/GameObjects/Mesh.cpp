@@ -8,8 +8,6 @@
 //////////////////////////////////////////////////////////////////////////////
 Mesh::Mesh(const std::string& fileName)
 {
-//	Init(OBJModel(fileName).ToIndexedModel());
-
 	IndexedModel model = OBJModel(fileName).ToIndexedModel();
 	Init(model.positions, model.indices, model.texCoords);
 }
@@ -133,10 +131,13 @@ MeshManager& MeshManager::GetInstance()
 void MeshManager::LoadModels()
 {
 	for (auto& pair : meshID)
-		if (pair.second != meshID.size() - 1)
+		if (pair.second == meshID.size() - 2)
+			break;
+		else
 			meshes.push_back(new Mesh(pair.first));
 
 	meshes.push_back(new Mesh(bgPositions, bgIndices, bgTexCoords));
+	meshes.push_back(new Mesh(exploPositions, bgIndices, bgTexCoords));
 }
 
 void MeshManager::Bind(const std::string & modelPath)

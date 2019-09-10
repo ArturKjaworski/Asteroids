@@ -12,7 +12,7 @@ public:
 	~Enemy();
 
 	void Update(float deltaTime)override;
-	void OnHit()override;
+	bool OnHit()override;
 
 private:
 	glm::vec3 velocity;

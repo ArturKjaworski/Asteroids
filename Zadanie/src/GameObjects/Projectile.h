@@ -10,7 +10,7 @@ public:
 	~Projectile();
 
 	void Update(float deltaTime) override;
-	void OnHit() override;
+	bool OnHit() override;
 
 private:
 	float projectileSpeed;

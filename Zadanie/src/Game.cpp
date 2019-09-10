@@ -6,6 +6,8 @@
 #include "GameObjects/Enemy.h"
 #include "GameObjects/StaticObject.h"
 #include "GameObjects/Projectile.h"
+#include "Text.h"
+#include "Input.h"
 
 #include "Settings.h"
 
@@ -46,82 +48,101 @@ Game & Game::GetInstance()
 
 void Game::Init()
 {
-	spawnTime = 0;
-	shootTime = 0;
-	enemyCreationRate = Settings::GetInstance().settings.enemyInitialCreationRate;
-
-	gObjects.push_back(new StaticObject("BG", "res/tex/BG.jpg", GameObject::EObjectType::BG, glm::vec3(0, 0, 0)));
-
-	player = new Player("res/models/player.obj", "res/tex/player.jpg", GameObject::EObjectType::PLAYER, glm::vec3(0, 0, 60));
-
-	gObjects.push_back(player);
+	state = EGameState::LOADING;
 }
 
 void Game::Input(char btn)
 {
+	TextManager& text = TextManager::GetInstance();
+
+	std::string buffer;
+
 	switch (btn)
 	{
 	case 'a':
 	{
-		player->Move(-1);
+		if (state == EGameState::RUNNING)
+			player->Move(-1);
 		break;
 	}
 	case 'w':
 	{
-		player->Move(-2);
+		if (state == EGameState::RUNNING)
+			player->Move(-2);
 		break;
 	}
 	case 's':
 	{
-		player->Move(2);
+		if (state == EGameState::RUNNING)
+			player->Move(2);
 		break;
 	}
 	case 'd':
 	{
-		player->Move(1);
+		if (state == EGameState::RUNNING)
+			player->Move(1);
 		break;
 	}
 
 	case 'u':		//vertical stop
 	{
-		player->Move(-3);
+		if (state == EGameState::RUNNING)
+			player->Move(-3);
 		break;
 	}
 	case 'l':		//horizontal stop
 	{
-		player->Move(3);
+		if (state == EGameState::RUNNING)
+			player->Move(3);
 		break;
 	}
 
 	case 'f':		//shoot
 	{
-		player->Shoot();
+		if (state == EGameState::RUNNING)
+			if (shootTime > (1/player->GetFireRate()))
+			{
+				glm::vec3 pos = player->GetTransform().GetPos();
+				pos.z -= 2;
+				Projectile* proj = new Projectile("res/models/projectile.obj", "res/tex/projectile.png", GameObject::EObjectType::PROJECTILE, pos);
+				projectiles.push_back(proj);
+				gObjects.push_back(proj);
 
-		if (shootTime > player->GetFireRate())
-		{
-			glm::vec3 pos = player->GetTransform().GetPos();
-			pos.z -= 2;
-			Projectile* proj = new Projectile("res/models/projectile.obj", "res/tex/projectile.png", GameObject::EObjectType::PROJECTILE, pos);
-			projectiles.push_back(proj);
-			gObjects.push_back(proj);
-
-			shootTime = 0;
-		}
+				shootTime = 0;
+			}
 
 		break;
 	}
 
+	case 'e':
+	{
+		if (player->Shoot())
+		{
+			for (GameObject* obj : gObjects)
+				if (obj->GetType() == GameObject::EObjectType::ENEMY)
+					objToDestroy.push_back(obj);
+		}
+		break;
+	}
 
 	default:
+	{
 		break;
+	}
 	};
 }
 
 void Game::Update(float deltaTime)
 {
+	inputTime += deltaTime;
+
+	if (state != EGameState::RUNNING)
+		return;
+
 	spawnTime += deltaTime;
 	shootTime += deltaTime;
 
+	score += deltaTime;
 
 	int maxEnemyToSpawn = 0;
 	if (spawnTime > 1/enemyCreationRate)
@@ -138,8 +159,6 @@ void Game::Update(float deltaTime)
 		obj->Update(deltaTime);
 		if (obj->GetType() != GameObject::EObjectType::BG)
 		{
-
-
 			if (obj->GetType() == GameObject::EObjectType::PLAYER)
 				continue;
 
@@ -150,38 +169,55 @@ void Game::Update(float deltaTime)
 				continue;
 			}
 
-			if ((obj->GetTransform().GetPos().z + obj->GetHitBoxSize().z/2 >= player->GetTransform().GetPos().z - player->GetHitBoxSize().z / 2)
-				&& (obj->GetTransform().GetPos().z - obj->GetHitBoxSize().z / 2 <= player->GetTransform().GetPos().z + player->GetHitBoxSize().z / 2))
+			if (obj->GetType() == GameObject::EObjectType::EXPLOSION)
+				if (dynamic_cast<StaticObject*>(obj)->alpha <= 0 || obj->GetTransform().GetPos().z > 70)
+					objToDestroy.push_back(obj);
+
+			if (IsCollide(player, obj))
 			{
-				if (IsCollide(player, obj))
-				{
-					player->OnHit();
-					objToDestroy.push_back(obj);
-					continue;
-				}
+				if (player->OnHit())
+					state = EGameState::GAME_OVER;
+
+				objToDestroy.push_back(obj);
+				continue;
 			}
-
-			//collision with projectiles
-			for (auto& proj : projectiles)
-				if (IsCollide(proj, obj))
-				{
-					proj->OnHit();
-					objToDestroy.push_back(proj);
-					objToDestroy.push_back(obj);
-
-					enemyCreationRate += Settings::GetInstance().settings.enemyCreationRate;
-					continue;
-				}
 
 			if (obj->GetTransform().GetPos().z > 70)
 				objToDestroy.push_back(obj);
+			else
+			{
+				//collision with projectiles
+				for (auto& proj : projectiles)
+				{
+					if ((obj->GetTransform().GetPos().x + obj->GetHitBoxSize().x / 2 < proj->GetTransform().GetPos().x - proj->GetHitBoxSize().x / 2) &&
+						(obj->GetTransform().GetPos().x - obj->GetHitBoxSize().x / 2 > proj->GetTransform().GetPos().x + proj->GetHitBoxSize().x / 2))
+						continue;
+
+					if (IsCollide(proj, obj))
+					{
+						//proj->OnHit();		in case when projectile got up'ed,  Not implemented
+						objToDestroy.push_back(proj);
+						objToDestroy.push_back(obj);
+
+						score += 50;
+						player->AddBonus();
+
+						enemyCreationRate += Settings::GetInstance().settings.enemyCreationRate;
+						continue;
+					}
+				}
+			}
 		}
 	}
 	for (auto& obj : objToDestroy)
 	{
 		auto tmpObj = std::find(gObjects.begin(), gObjects.end(), obj);
 		if (tmpObj != gObjects.end())
+		{
 			gObjects.erase(tmpObj);
+			if (obj->GetType() == GameObject::EObjectType::ENEMY)
+				gObjects.push_back(new StaticObject("explo", "res/tex/explo.jpg", GameObject::EObjectType::EXPLOSION, obj->GetTransform().GetPos(), glm::vec3(), glm::vec3(0.1, 0.1, 0.1)));
+		}
 		else
 			continue;	//1 object added 2 times
 
@@ -196,6 +232,34 @@ void Game::Update(float deltaTime)
 		obj = nullptr;
 	}
 	objToDestroy.clear();
+}
+
+void Game::SetState(EGameState _state)
+{
+	if (state != _state)
+		state = _state;
+}
+
+void Game::Reset()
+{
+	score = 0;
+	spawnTime = 0;
+	shootTime = 0;
+	inputTime = 0;
+	enemyCreationRate = Settings::GetInstance().settings.enemyInitialCreationRate;
+
+	for (auto& gObj : gObjects)
+		delete(gObj);
+	gObjects.clear();
+
+	objToDestroy.clear();
+	projectiles.clear();
+
+	gObjects.push_back(new StaticObject("BG", "res/tex/BG.jpg", GameObject::EObjectType::BG, glm::vec3(0, 0, 0)));
+	player = new Player("res/models/player.obj", "res/tex/player.jpg", GameObject::EObjectType::PLAYER, glm::vec3(0, 0, 60));
+	gObjects.push_back(player);
+
+	Input::Init();
 }
 
 bool Game::IsCollide(GameObject* gObj1, GameObject* gObj2)

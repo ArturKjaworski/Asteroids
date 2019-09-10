@@ -24,8 +24,10 @@ private:
 		, std::make_pair("res/tex/asteroid1.png", 1)
 		, std::make_pair("res/tex/projectile.png", 2)
 		, std::make_pair("res/tex/BG.jpg", 3)
+		, std::make_pair("res/tex/explo.jpg", 4),
+		
 	};
 
-	GLuint tex[3];
+	GLuint tex[5];
 };
 
