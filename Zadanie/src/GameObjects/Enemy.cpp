@@ -1,5 +1,4 @@
-﻿#include "pch.h"
-#include "Enemy.h"
+﻿#include "Enemy.h"
 
 #include "../Settings.h"
 
@@ -17,8 +16,6 @@ Enemy::Enemy(const std::string & modelPath, const std::string & texPath, EObject
 	angVelocity.y = float(rand() % (int((maxAng.y - minAng.y) * 100))) / 100 + minAng.y;
 	angVelocity.z = float(rand() % (int((maxAng.z - minAng.z) * 100))) / 100 + minAng.z;
 
-	explosionTime = set.settings.enemyExplosionTime;
-	
 	size = glm::vec3(3.4, 0, 3.0);
 }
 
@@ -39,5 +36,5 @@ void Enemy::Update(float deltaTime)
 
 bool Enemy::OnHit()
 {
-	return true;
+	return true;		//asteroid with more than 1 life?
 }

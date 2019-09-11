@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Text.h"
 
 #include "Game.h"
@@ -241,10 +240,6 @@ void TextManager::RenderSettingsText(Shader& textShader)
 	++counter;
 	RenderText(textShader, (settingActive && (counter == optionSelected)) ? buffer : std::to_string(conf.enemyCreationRate), 350, scrH - 300, 1.0f, (counter == optionSelected ? selectedColor : color));
 
-}
-
-void TextManager::RenderPauseMenuText(Shader& textShader)
-{
 }
 
 void TextManager::RenderRunningText(Shader& textShader)

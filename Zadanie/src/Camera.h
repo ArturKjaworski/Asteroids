@@ -1,4 +1,6 @@
 #pragma once
+#include "pch.h"
+
 class Camera
 {
 public:
@@ -15,8 +17,6 @@ private:
 	glm::mat4 perspectiveMat;
 	glm::mat4 orthoMat;
 	glm::vec3 pos;
-	//glm::vec3 forward;
 	glm::vec3 up;
-
 };
 

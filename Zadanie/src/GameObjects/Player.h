@@ -1,5 +1,4 @@
 ﻿#pragma once
-
 #include "GameObject.h"
 
 #include <vector>
@@ -23,7 +22,6 @@ public:
 	const int GetShieldCount() const { return shields; }
 
 	void AddBonus();
-
 
 private:
 	float mass;								//[kg]

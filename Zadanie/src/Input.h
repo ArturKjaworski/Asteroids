@@ -1,9 +1,5 @@
 #pragma once
-
 #include "Game.h"
-
-#include <map>
-#include <string>
 
 namespace Input
 {

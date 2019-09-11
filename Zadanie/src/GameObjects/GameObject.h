@@ -1,8 +1,10 @@
 #pragma once
+#include "../pch.h"
 
 #include "Transform.h"
-#include "Mesh.h"
-#include "Texture.h"
+
+#include "../Mesh.h"
+#include "../Texture.h"
 
 #include <string>
 
@@ -45,6 +47,5 @@ protected:
 
 	std::string texPath;
 	std::string modelPath;
-
 };
 

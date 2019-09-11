@@ -1,18 +1,7 @@
-﻿#include "pch.h"
-#include "Player.h"
+﻿#include "Player.h"
 
 #include "Projectile.h"
 #include "../Settings.h"
-
-#include <iostream>
-
-/*
-szybkostrzelność działa[wystrzały / sekundę]
-● prędkość pocisków działa[metry / sekundę]
-● prędkość “do przodu” statku gracza[metry / sekundę]
-● siła ciągu silników manewrowych [niutony]
-● masa statku gracza [kilogramy]
-*/
 
 Player::Player(const std::string & modelPath, const std::string & texPath, EObjectType type, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale):
 	GameObject(modelPath, texPath, type, pos, rot, scale)

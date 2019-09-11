@@ -1,23 +1,13 @@
 ﻿#include "pch.h"
 
-#define _CRTDBG_MAP_ALLOC
-#include <stdlib.h>
-#include <crtdbg.h>
-
-#include "Input.h"
-#include "Text.h"
-#include "Shader.h"
-#include "Renderer.h"
-
-#include "Game.h"
-
 #include "Settings.h"
-
-#include "gameObjects/Texture.h"
-#include "gameObjects/Mesh.h"
+#include "Input.h"
+#include "Renderer.h"
+#include "Game.h"
+#include "Texture.h"
+#include "Mesh.h"
 
 #include <iostream>
-#include <map>
 
 const GLuint SCR_WIDTH = 800;
 const GLuint SCR_HEIGHT = 600;
@@ -73,7 +63,7 @@ int main(void)
 	Game& game = Game::GetInstance();
 	game.Init();
 	Renderer& renderer = Renderer::GetInstance();
-	renderer.Init("res/basicShader", "res/textShader", SCR_WIDTH, SCR_HEIGHT);
+	renderer.Init("res/shaders/basicShader", "res/shaders/textShader", SCR_WIDTH, SCR_HEIGHT);
 
 	TextureManager::GetInstance().LoadTextures();
 	MeshManager::GetInstance().LoadModels();

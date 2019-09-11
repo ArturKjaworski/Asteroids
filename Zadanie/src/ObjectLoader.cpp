@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "ObjectLoader.h"
 #include <fstream>
 #include <iostream>

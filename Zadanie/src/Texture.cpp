@@ -1,10 +1,8 @@
-#include "pch.h"
 #include "Texture.h"
 
-#include "../stb_img/stb_img.h"
+#include "stb_img/stb_img.h"
 
 #include <iostream>
-
 #include <thread>
 
 TextureManager::TextureManager()
@@ -30,7 +28,7 @@ void TextureManager::LoadTextures()
 	std::lock_guard<std::mutex> lock(textures_mutex);
 	for (auto& pair : texID)
 	{
-		std::thread t([=]()
+		std::thread t([&]()
 		{
 			Texture* tex = new Texture();
 			tex->localBuffer = stbi_load(pair.first.c_str(), &tex->width, &tex->height, &tex->BPP, 4);

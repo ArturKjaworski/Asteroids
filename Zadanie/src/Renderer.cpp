@@ -1,19 +1,13 @@
-#include "pch.h"
 #include "Renderer.h"
 
-#include "GameObjects/GameObject.h"
 #include "Camera.h"
 #include "Shader.h"
 #include "Text.h"
-#include "GameObjects/Texture.h"
-#include "GameObjects/Mesh.h"
-
-#include "GameObjects/StaticObject.h"
 
 #include "Game.h"
-#include "Settings.h"
 
-#include "thread"
+#include "GameObjects/GameObject.h"
+#include "GameObjects/StaticObject.h"
 
 Renderer::Renderer()
 {
@@ -32,8 +26,6 @@ void Renderer::Init(const std::string& shaderName, const std::string& textShader
 	textShader = new Shader(textShaderName);
 
 	TextManager::GetInstance().Init(SCR_WIDTH, SCR_HEIGHT);
-
-//	Draw();
 }
 
 Renderer::~Renderer()

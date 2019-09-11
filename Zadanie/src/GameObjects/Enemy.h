@@ -1,10 +1,7 @@
 ﻿#pragma once
-/*
-● zakres prędkości kątowej asteroid [radiany / sekundę]
-● czas trwania wybuchu asteroidy [sekundy]
-*/
 
 #include "GameObject.h"
+
 class Enemy : public GameObject
 {
 public:
@@ -17,6 +14,5 @@ public:
 private:
 	glm::vec3 velocity;
 	glm::vec3 angVelocity;
-	float explosionTime;
 };
 

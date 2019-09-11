@@ -1,13 +1,15 @@
 #pragma once
-
-#include <map>
-
-#include "Shader.h"
+#include "pch.h"
 
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
-struct Character {
+#include "Shader.h"
+
+#include <map>
+
+struct Character 
+{
 	GLuint TextureID;   // ID handle of the glyph texture
 	glm::ivec2 Size;    // Size of glyph
 	glm::ivec2 Bearing;  // Offset from baseline to left/top of glyph
@@ -37,7 +39,6 @@ private:
 
 	void RenderMainMenuText(Shader& textShader);
 	void RenderSettingsText(Shader& textShader);
-	void RenderPauseMenuText(Shader& textShader);
 	void RenderRunningText(Shader& textShader);
 	void RenderLoadingText(Shader& textShader);
 	void RenderGameOverText(Shader& textShader);
@@ -49,8 +50,6 @@ private:
 	GLfloat scrH;
 
 	glm::vec3 color;
-	glm::vec3 selectedColor;
-
-	
+	glm::vec3 selectedColor;	
 };
 

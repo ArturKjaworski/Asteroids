@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../ObjectLoader.h"
+#include "ObjectLoader.h"
 
 #include <unordered_map>
 
@@ -95,14 +95,14 @@ private:
 
 	std::unordered_map<std::string, unsigned int> meshID =
 	{
-		std::make_pair("res/models/asteroid1.obj" , 0),
-		std::make_pair("res/models/player.obj" , 1),
-		std::make_pair("res/models/projectile.obj", 2),
-		std::make_pair("BG", 3),
-		std::make_pair("explo", 4)
+		std::make_pair("res/models/asteroid1.obj" , 0)
+		, std::make_pair("res/models/player.obj" , 1)
+		, std::make_pair("res/models/projectile.obj", 2)
+		, std::make_pair("BG", 3)
+		, std::make_pair("explo", 4)
 	};
 
 	std::vector<Mesh*> meshes;
-
 	unsigned int loadedMeshCounter = 0;
+
 };

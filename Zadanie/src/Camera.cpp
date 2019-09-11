@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Camera.h"
 
 Camera::Camera(const glm::vec3& pos, float fov, GLfloat w, GLfloat h, float zNear, float zFar)

@@ -1,9 +1,6 @@
-#include "pch.h"
 #include "Projectile.h"
+
 #include "../Settings.h"
-
-#include <iostream>
-
 
 Projectile::Projectile(const std::string & modelPath, const std::string & texPath, EObjectType type, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 	: GameObject(modelPath, texPath, type, pos, rot, scale)
@@ -26,6 +23,6 @@ void Projectile::Update(float deltaTime)
 
 bool Projectile::OnHit()
 {
-	
+	//if projectile can go through asteroid
 	return true;
 }

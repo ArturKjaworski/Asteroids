@@ -1,15 +1,15 @@
-#include "pch.h"
 #include "Input.h"
 
 #include "Text.h"
 #include "Settings.h"
 
+#include <string>
 #include <sstream> 
+#include <map>
 
 namespace Input 
 {
 	std::map<int, bool> pressed;
-
 
 	void Input::Init()
 	{

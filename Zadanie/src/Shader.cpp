@@ -1,4 +1,3 @@
-#include "pch.h"
 #include "Shader.h"
 
 #include <iostream>
@@ -14,9 +13,6 @@ Shader::Shader(const std::string & fileName)
 
 	for (size_t ii = 0; ii < EShaderType::COUNT; ++ii)
 		glAttachShader(program, shaders[ii]);
-
-	//glBindAttribLocation(program, 0, "position");
-	//glBindAttribLocation(program, 1, "texCoords");
 
 	glLinkProgram(program);
 	CheckShaderError(program, GL_LINK_STATUS, true, "Program linking error");
