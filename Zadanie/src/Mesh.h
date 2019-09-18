@@ -73,10 +73,10 @@ private:
 
 	std::vector<glm::vec3> exploPositions =
 	{
-		{-2.0f, 0.1f,  2.0f },
-		{-2.0f, 0.1f, -2.0f },
-		{ 2.0f, 0.1f, -2.0f },
-		{ 2.0f, 0.1f,  2.0f }
+		{-3.0f, 0.1f,  3.0f },
+		{-3.0f, 0.1f, -3.0f },
+		{ 3.0f, 0.1f, -3.0f },
+		{ 3.0f, 0.1f,  3.0f }
 	};
 
 	std::vector<unsigned int> bgIndices =
@@ -104,5 +104,4 @@ private:
 
 	std::vector<Mesh*> meshes;
 	unsigned int loadedMeshCounter = 0;
-
 };

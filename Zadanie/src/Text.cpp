@@ -264,5 +264,5 @@ void TextManager::RenderGameOverText(Shader & textShader)
 	RenderText(textShader, "Game Over ", scrW / 2 - 50 , scrH / 2 + 40, 1.0f, color);
 	RenderText(textShader, "Score: ", scrW / 2 - 40 , scrH / 2, 1.0f, color);
 	RenderText(textShader, std::to_string(int(Game::GetInstance().GetScore())), scrW / 2 + 30, scrH / 2, 1.0f, color);
-	RenderText(textShader, "Press enter to continue ", scrW / 2 - 150, scrH / 2 - 40, 1.0f, color);
+	RenderText(textShader, "Press enter to continue ", scrW / 2 - 125, scrH / 2 - 40, 1.0f, color);
 }

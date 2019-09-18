@@ -1,6 +1,6 @@
-playerFireRate 1 
+playerFireRate 1.5
 projectilesSpeed 30
-forwardSpeed 50
+forwardSpeed 10
 enemyAngVelocityMin 0.2 0.2 0.3 
 enemyAngVelocityMax 0.5 0.3 0.8 
 enemyExplosionTime 1
@@ -10,9 +10,9 @@ enemyInitialCreationRate 1
 enemyCreationRate 0.5
 
 default
-playerFireRate 1 
+playerFireRate 1.5
 projectilesSpeed 30
-forwardSpeed 50
+forwardSpeed 10
 enemyAngVelocityMin 0.2 0.2 0.3 
 enemyAngVelocityMax 0.5 0.3 0.8 
 enemyExplosionTime 1

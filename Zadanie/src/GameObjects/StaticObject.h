@@ -12,8 +12,8 @@ public:
 	void Update(float deltaTime)override;
 	bool OnHit()override { return true; }
 
-	float scaleTimer = 0;
-	float exploSionTime = 1;
+	float scaleTimer;
+	float explosionTime;
 
 	float alpha = 0.99;
 };

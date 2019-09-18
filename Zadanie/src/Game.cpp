@@ -136,7 +136,7 @@ void Game::Update(float deltaTime)
 	spawnTime += deltaTime;
 	shootTime += deltaTime;
 
-	score += deltaTime;
+	score += Settings::GetInstance().settings.forwardSpeed * deltaTime;
 
 	int maxEnemyToSpawn = 0;
 	if (spawnTime > 1/enemyCreationRate)
@@ -164,9 +164,11 @@ void Game::Update(float deltaTime)
 			}
 
 			if (obj->GetType() == GameObject::EObjectType::EXPLOSION)
+			{
 				if (dynamic_cast<StaticObject*>(obj)->alpha <= 0 || obj->GetTransform().GetPos().z > 70)
 					objToDestroy.push_back(obj);
-
+				continue;
+			}
 			if (IsCollide(player, obj))
 			{
 				if (player->OnHit())
